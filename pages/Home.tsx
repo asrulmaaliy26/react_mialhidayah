@@ -94,7 +94,7 @@ const Home: React.FC = () => {
           try {
             const parsedStats = JSON.parse(envStats);
             if (Array.isArray(parsedStats)) {
-              loadedStats = { 'UMUM': parsedStats, 'MA': parsedStats, 'SMP': parsedStats, 'SD': parsedStats, 'TK': parsedStats, 'KAMPUS': parsedStats };
+              loadedStats = { 'UMUM': parsedStats, 'MA': parsedStats, 'SMPT': parsedStats, 'TK': parsedStats, 'KAMPUS': parsedStats, 'MI': parsedStats };
             }
           } catch (e) {
             console.error("Invalid VITE_HOME_STATS", e);
