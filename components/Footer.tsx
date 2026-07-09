@@ -173,8 +173,7 @@ const Footer: React.FC = () => {
                 </div>
                 <a href="https://share.google/6fpKEOeoZkTFmdUKS">
                   <span className="font-medium text-white/80 leading-relaxed">
-                    Jl. KH Hasyim Asyari No.27, Kauman, Kec. Kauman, Kabupaten
-                    Tulungagung, Jawa Timur 66261
+                    Punjul, Karang Rejo
                   </span>
                 </a>
               </li>
@@ -182,8 +181,8 @@ const Footer: React.FC = () => {
                 <div className="p-2 bg-white/5 rounded-xl mr-4 group-hover:bg-islamic-gold-500 group-hover:text-white transition-all">
                   <Phone className="w-5 h-5 text-islamic-gold-500 group-hover:text-inherit" />
                 </div>
-                <a href="https://wa.me/6285749555505">
-                  <span className="font-bold text-white">085749555505</span>
+                <a href="https://wa.me/6285708608121">
+                  <span className="font-bold text-white">+62 857-0860-8121 (Bu Qori)</span>
                 </a>
               </li>
               <li className="flex items-center group">
