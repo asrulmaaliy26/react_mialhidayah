@@ -1,6 +1,5 @@
-
-import React, { useState, useContext, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   Save,
@@ -15,16 +14,16 @@ import {
   Trophy,
   Plus,
   Trash2,
-  Layers
-} from 'lucide-react';
-import ReactQuill from 'react-quill-new';
-import 'react-quill-new/dist/quill.snow.css';
-import { generateNewsArticle } from '../../services/gemini';
-import { createNews, fetchNewsCategories } from '../../services/api';
-import { EducationLevel } from '../../types';
-import { LevelContext } from '../../App';
-import { useLevelConfig } from '../../hooks/useLevelConfig';
-import { useToast } from '../../components/ToastProvider';
+  Layers,
+} from "lucide-react";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
+import { generateNewsArticle } from "../../services/gemini";
+import { createNews, fetchNewsCategories } from "../../services/api";
+import { EducationLevel } from "../../types";
+import { LevelContext } from "../../App";
+import { useLevelConfig } from "../../hooks/useLevelConfig";
+import { useToast } from "../../components/ToastProvider";
 
 const CreateNews: React.FC = () => {
   const navigate = useNavigate();
@@ -33,24 +32,40 @@ const CreateNews: React.FC = () => {
   const toast = useToast();
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [briefSketch, setBriefSketch] = useState('');
+  const [briefSketch, setBriefSketch] = useState("");
 
-  const [title, setTitle] = useState('');
-  const [excerpt, setExcerpt] = useState('');
+  const [title, setTitle] = useState("");
+  const [excerpt, setExcerpt] = useState("");
   const [categories, setCategories] = useState<string[]>([]);
-  const [category, setCategory] = useState<string>('Kegiatan');
-  const [level, setLevel] = useState<'Nasional' | 'Internasional' | 'Provinsi' | 'Kabupaten' | 'Kecamatan' | 'Kota' | 'Sekolah'>('Sekolah');
-  const DEFAULT_JENJANG = import.meta.env.VITE_DEFAULT_JENJANG || 'UMUM';
-  const isLocked = DEFAULT_JENJANG !== 'UMUM';
-  const [jenjang, setJenjang] = useState<EducationLevel>(isLocked ? (DEFAULT_JENJANG as EducationLevel) : (activeLevel === 'UMUM' ? 'MA' : activeLevel));
-  const [lingkupKampus, setLingkupKampus] = useState<'Umum' | 'Spesifik'>('Umum');
-  const [fakultas, setFakultas] = useState<string>('');
-  const [jurusan, setJurusan] = useState<string>('');
-  const [content, setContent] = useState('');
+  const [category, setCategory] = useState<string>("Kegiatan");
+  const [level, setLevel] = useState<
+    | "Nasional"
+    | "Internasional"
+    | "Provinsi"
+    | "Kabupaten"
+    | "Kecamatan"
+    | "Kota"
+    | "Sekolah"
+  >("Sekolah");
+  const DEFAULT_JENJANG = import.meta.env.VITE_DEFAULT_JENJANG || "UMUM";
+  const isLocked = DEFAULT_JENJANG !== "UMUM";
+  const [jenjang, setJenjang] = useState<EducationLevel>(
+    isLocked
+      ? (DEFAULT_JENJANG as EducationLevel)
+      : activeLevel === "UMUM"
+        ? "MA"
+        : activeLevel,
+  );
+  const [lingkupKampus, setLingkupKampus] = useState<"Umum" | "Spesifik">(
+    "Umum",
+  );
+  const [fakultas, setFakultas] = useState<string>("");
+  const [jurusan, setJurusan] = useState<string>("");
+  const [content, setContent] = useState("");
 
   const FAKULTAS_OPTIONS: Record<string, string[]> = {
-    'Ushuluddin': ['Studi Islam', 'Ilmu Al-Quran dan Tafsir'],
-    'Tarbiyah': ['Manajemen Pendidikan Islam']
+    Ushuluddin: ["Studi Islam", "Ilmu Al-Quran dan Tafsir"],
+    Tarbiyah: ["Manajemen Pendidikan Islam"],
   };
   const [mainImage, setMainImage] = useState<File | null>(null);
   const [gallery, setGallery] = useState<File[]>([]);
@@ -66,9 +81,9 @@ const CreateNews: React.FC = () => {
           setCategory(cats[0]);
         }
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error("Error fetching categories:", error);
         // Fallback to default categories
-        setCategories(['Prestasi', 'Kegiatan', 'Akademik', 'Pengumuman']);
+        setCategories(["Prestasi", "Kegiatan", "Akademik", "Pengumuman"]);
       }
     };
     loadCategories();
@@ -85,12 +100,16 @@ const CreateNews: React.FC = () => {
       const result = await generateNewsArticle(briefSketch);
       setContent(result);
       if (!title) {
-        const titleSuggest = result.split('\n')[0].substring(0, 100).replace(/judul[:\s]*/i, '');
+        const titleSuggest = result
+          .split("\n")[0]
+          .substring(0, 100)
+          .replace(/judul[:\s]*/i, "");
         setTitle(titleSuggest || title);
       }
       // Generate excerpt from first 150 characters of content
       if (!excerpt) {
-        const excerptText = result.substring(0, 150).replace(/\n/g, ' ') + '...';
+        const excerptText =
+          result.substring(0, 150).replace(/\n/g, " ") + "...";
         setExcerpt(excerptText);
       }
     } catch (error) {
@@ -106,7 +125,10 @@ const CreateNews: React.FC = () => {
     }
   };
 
-  const handleGalleryChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleGalleryChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     if (e.target.files && e.target.files[0]) {
       const newGallery = [...gallery];
       newGallery[index] = e.target.files[0];
@@ -129,49 +151,85 @@ const CreateNews: React.FC = () => {
 
     // Validation
     if (!title.trim()) {
-      toast.warning('Judul harus diisi');
-      return;
-    }
-    if (!excerpt.trim()) {
-      toast.warning('Ringkasan harus diisi');
+      toast.warning("Judul harus diisi");
       return;
     }
     if (!content.trim()) {
-      toast.warning('Konten harus diisi');
+      toast.warning("Konten harus diisi");
       return;
+    }
+
+    // Auto-generate excerpt if empty
+    let finalExcerpt = excerpt.trim();
+    if (!finalExcerpt) {
+      const strippedContent = content
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&#[0-9]+;/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      finalExcerpt =
+        strippedContent.substring(0, 150) +
+        (strippedContent.length > 150 ? "..." : "");
+      setExcerpt(finalExcerpt);
     }
 
     setIsSubmitting(true);
     try {
-      const today = new Date().toISOString().split('T')[0];
+      const today = new Date().toISOString().split("T")[0];
 
       // Filter out null/empty gallery items
-      const validGallery = gallery.filter(file => file !== null && file !== undefined);
+      const validGallery = gallery.filter(
+        (file) => file !== null && file !== undefined,
+      );
+
+      // If no main image selected, use default logomi.jpeg
+      let finalMainImage: File | undefined = mainImage || undefined;
+      if (!finalMainImage) {
+        try {
+          const res = await fetch("/logomi.jpeg");
+          const blob = await res.blob();
+          finalMainImage = new File([blob], "logomi.jpeg", {
+            type: blob.type || "image/jpeg",
+          });
+        } catch {
+          finalMainImage = undefined;
+        }
+      }
 
       const response = await createNews({
         title,
-        excerpt,
+        excerpt: finalExcerpt,
         content,
         date: today,
         category,
         jenjang: jenjang,
-        fakultas: jenjang === 'KAMPUS' && lingkupKampus === 'Spesifik' ? fakultas : undefined,
-        jurusan: jenjang === 'KAMPUS' && lingkupKampus === 'Spesifik' ? jurusan : undefined,
-        level: category === 'Prestasi' ? level : undefined,
-        main_image: mainImage || undefined,
+        fakultas:
+          jenjang === "KAMPUS" && lingkupKampus === "Spesifik"
+            ? fakultas
+            : undefined,
+        jurusan:
+          jenjang === "KAMPUS" && lingkupKampus === "Spesifik"
+            ? jurusan
+            : undefined,
+        level: category === "Prestasi" ? level : undefined,
+        main_image: finalMainImage,
         gallery: validGallery.length > 0 ? validGallery : undefined,
       });
 
       // Clear cache to force reload on ManageNews
-      sessionStorage.removeItem('admin_news_data');
-      sessionStorage.removeItem('admin_news_cats');
-      sessionStorage.removeItem('admin_news_timestamp');
+      sessionStorage.removeItem("admin_news_data");
+      sessionStorage.removeItem("admin_news_cats");
+      sessionStorage.removeItem("admin_news_timestamp");
 
-      toast.success(response.message || 'Berita berhasil ditambahkan!');
-      navigate('/admin/news');
+      toast.success(response.message || "Berita berhasil ditambahkan!");
+      navigate("/admin/news");
     } catch (error: any) {
-      toast.error(error.message || 'Gagal menyimpan berita');
-      console.error('Error creating news:', error);
+      toast.error(error.message || "Gagal menyimpan berita");
+      console.error("Error creating news:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -181,12 +239,19 @@ const CreateNews: React.FC = () => {
     <div className="p-8 max-w-5xl mx-auto w-full">
       <header className="flex justify-between items-center mb-12">
         <div className="flex items-center gap-4">
-          <Link to="/admin/news" className="p-3 bg-white rounded-2xl shadow-sm border border-slate-100 text-slate-400 hover:text-slate-900 transition-all">
+          <Link
+            to="/admin/news"
+            className="p-3 bg-white rounded-2xl shadow-sm border border-slate-100 text-slate-400 hover:text-slate-900 transition-all"
+          >
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
-            <h1 className="text-3xl font-black text-slate-900">Buat Warta Baru</h1>
-            <p className="text-slate-500 font-medium">Lengkapi form atau gunakan asisten AI.</p>
+            <h1 className="text-3xl font-black text-slate-900">
+              Buat Warta Baru
+            </h1>
+            <p className="text-slate-500 font-medium">
+              Lengkapi form atau gunakan asisten AI.
+            </p>
           </div>
         </div>
         <button
@@ -196,11 +261,13 @@ const CreateNews: React.FC = () => {
         >
           {isSubmitting ? (
             <>
-              <Loader2 className="w-5 h-5 text-islamic-gold-500 animate-spin" /> Menyimpan...
+              <Loader2 className="w-5 h-5 text-islamic-gold-500 animate-spin" />{" "}
+              Menyimpan...
             </>
           ) : (
             <>
-              <Save className="w-5 h-5 text-islamic-gold-500" /> Simpan Publikasi
+              <Save className="w-5 h-5 text-islamic-gold-500" /> Simpan
+              Publikasi
             </>
           )}
         </button>
@@ -212,7 +279,7 @@ const CreateNews: React.FC = () => {
             <div className="space-y-8">
               <div>
                 <label className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest mb-4">
-                  <Tag className="w-4 h-4 text-slate-400" /> Judul Artikel
+                  <Tag className="w-4 h-4 text-slate-400" /> Judul Artikel <span className="text-red-500 text-sm">*</span>
                 </label>
                 <input
                   type="text"
@@ -225,7 +292,8 @@ const CreateNews: React.FC = () => {
 
               <div>
                 <label className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest mb-4">
-                  <AlignLeft className="w-4 h-4 text-slate-400" /> Ringkasan Singkat
+                  <AlignLeft className="w-4 h-4 text-slate-400" /> Ringkasan
+                  Singkat
                 </label>
                 <textarea
                   rows={3}
@@ -248,7 +316,9 @@ const CreateNews: React.FC = () => {
                   >
                     {categories.length > 0 ? (
                       categories.map((cat) => (
-                        <option key={cat} value={cat}>{cat}</option>
+                        <option key={cat} value={cat}>
+                          {cat}
+                        </option>
                       ))
                     ) : (
                       <option value="">Loading...</option>
@@ -268,15 +338,16 @@ const CreateNews: React.FC = () => {
                       // When locked, show only env jenjang and UMUM
                       <>
                         <option value={DEFAULT_JENJANG}>
-                          {LEVEL_CONFIG[DEFAULT_JENJANG]?.name || DEFAULT_JENJANG}
+                          {LEVEL_CONFIG[DEFAULT_JENJANG]?.name ||
+                            DEFAULT_JENJANG}
                         </option>
                         <option value="UMUM">
-                          {LEVEL_CONFIG['UMUM']?.name || 'Yayasan AL Mannan'}
+                          {LEVEL_CONFIG["UMUM"]?.name || "Yayasan AL Mannan"}
                         </option>
                       </>
                     ) : (
                       // When not locked, show all jenjang
-                      Object.keys(LEVEL_CONFIG).map(key => (
+                      Object.keys(LEVEL_CONFIG).map((key) => (
                         <option key={key} value={key}>
                           {LEVEL_CONFIG[key].name}
                         </option>
@@ -286,7 +357,7 @@ const CreateNews: React.FC = () => {
                 </div>
               </div>
 
-              {jenjang === 'KAMPUS' && (
+              {jenjang === "KAMPUS" && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest mb-4">
@@ -296,14 +367,14 @@ const CreateNews: React.FC = () => {
                       className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-black text-slate-700 appearance-none outline-none"
                       value={lingkupKampus}
                       onChange={(e) => {
-                        const val = e.target.value as 'Umum' | 'Spesifik';
+                        const val = e.target.value as "Umum" | "Spesifik";
                         setLingkupKampus(val);
-                        if (val === 'Umum') {
-                           setFakultas('');
-                           setJurusan('');
+                        if (val === "Umum") {
+                          setFakultas("");
+                          setJurusan("");
                         } else {
-                           setFakultas('Ushuluddin');
-                           setJurusan(FAKULTAS_OPTIONS['Ushuluddin'][0]);
+                          setFakultas("Ushuluddin");
+                          setJurusan(FAKULTAS_OPTIONS["Ushuluddin"][0]);
                         }
                       }}
                     >
@@ -311,7 +382,7 @@ const CreateNews: React.FC = () => {
                       <option value="Spesifik">Spesifik Jurusan</option>
                     </select>
                   </div>
-                  {lingkupKampus === 'Spesifik' && (
+                  {lingkupKampus === "Spesifik" && (
                     <>
                       <div>
                         <label className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest mb-4">
@@ -322,11 +393,15 @@ const CreateNews: React.FC = () => {
                           value={fakultas}
                           onChange={(e) => {
                             setFakultas(e.target.value);
-                            setJurusan(FAKULTAS_OPTIONS[e.target.value][0] || '');
+                            setJurusan(
+                              FAKULTAS_OPTIONS[e.target.value][0] || "",
+                            );
                           }}
                         >
-                          {Object.keys(FAKULTAS_OPTIONS).map(f => (
-                            <option key={f} value={f}>{f}</option>
+                          {Object.keys(FAKULTAS_OPTIONS).map((f) => (
+                            <option key={f} value={f}>
+                              {f}
+                            </option>
                           ))}
                         </select>
                       </div>
@@ -339,9 +414,12 @@ const CreateNews: React.FC = () => {
                           value={jurusan}
                           onChange={(e) => setJurusan(e.target.value)}
                         >
-                          {fakultas && FAKULTAS_OPTIONS[fakultas]?.map(j => (
-                            <option key={j} value={j}>{j}</option>
-                          ))}
+                          {fakultas &&
+                            FAKULTAS_OPTIONS[fakultas]?.map((j) => (
+                              <option key={j} value={j}>
+                                {j}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </>
@@ -349,10 +427,11 @@ const CreateNews: React.FC = () => {
                 </div>
               )}
 
-              {category === 'Prestasi' && (
+              {category === "Prestasi" && (
                 <div>
                   <label className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest mb-4">
-                    <Trophy className="w-4 h-4 text-islamic-gold-500" /> Tingkat Prestasi
+                    <Trophy className="w-4 h-4 text-islamic-gold-500" /> Tingkat
+                    Prestasi
                   </label>
                   <select
                     className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-black text-slate-700 appearance-none outline-none"
@@ -381,7 +460,9 @@ const CreateNews: React.FC = () => {
                   onChange={handleMainImageChange}
                 />
                 {mainImage && (
-                  <p className="text-xs text-slate-500 mt-2">File: {mainImage.name}</p>
+                  <p className="text-xs text-slate-500 mt-2">
+                    File: {mainImage.name}
+                  </p>
                 )}
               </div>
 
@@ -401,7 +482,8 @@ const CreateNews: React.FC = () => {
                 <div className="space-y-3">
                   {gallery.length === 0 ? (
                     <p className="text-xs text-slate-400 italic py-4 text-center bg-slate-50 rounded-xl border border-slate-100">
-                      Belum ada foto galeri. Klik "Tambah Foto" untuk menambahkan.
+                      Belum ada foto galeri. Klik "Tambah Foto" untuk
+                      menambahkan.
                     </p>
                   ) : (
                     gallery.map((file, index) => (
@@ -414,7 +496,9 @@ const CreateNews: React.FC = () => {
                             onChange={(e) => handleGalleryChange(index, e)}
                           />
                           {file && (
-                            <p className="text-xs text-slate-500 mt-1 ml-1">📎 {file.name}</p>
+                            <p className="text-xs text-slate-500 mt-1 ml-1">
+                              📎 {file.name}
+                            </p>
                           )}
                         </div>
                         <button
@@ -432,7 +516,7 @@ const CreateNews: React.FC = () => {
 
               <div>
                 <label className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest mb-4">
-                  <AlignLeft className="w-4 h-4" /> Konten Berita
+                  <AlignLeft className="w-4 h-4" /> Konten Berita <span className="text-red-500 text-sm">*</span>
                 </label>
                 <div className="bg-slate-50 border border-slate-100 rounded-[2.5rem] overflow-hidden">
                   <ReactQuill
@@ -441,18 +525,30 @@ const CreateNews: React.FC = () => {
                     onChange={setContent}
                     modules={{
                       toolbar: [
-                        [{ 'header': [1, 2, 3, false] }],
-                        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                        [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
-                        ['link', 'image'],
-                        ['clean']
+                        [{ header: [1, 2, 3, false] }],
+                        ["bold", "italic", "underline", "strike", "blockquote"],
+                        [
+                          { list: "ordered" },
+                          { list: "bullet" },
+                          { indent: "-1" },
+                          { indent: "+1" },
+                        ],
+                        ["link", "image"],
+                        ["clean"],
                       ],
                     }}
                     formats={[
-                      'header',
-                      'bold', 'italic', 'underline', 'strike', 'blockquote',
-                      'list', 'bullet', 'indent',
-                      'link', 'image'
+                      "header",
+                      "bold",
+                      "italic",
+                      "underline",
+                      "strike",
+                      "blockquote",
+                      "list",
+                      "bullet",
+                      "indent",
+                      "link",
+                      "image",
                     ]}
                     className="h-96 mb-12"
                   />
@@ -470,7 +566,8 @@ const CreateNews: React.FC = () => {
                 <h3 className="text-xl font-black">AI Auto-Write</h3>
               </div>
               <p className="text-xs text-slate-400 mb-8 leading-relaxed">
-                Masukkan poin-poin kegiatan, AI akan memprosesnya menjadi artikel formal sesuai jenjang pendidikan yang dipilih.
+                Masukkan poin-poin kegiatan, AI akan memprosesnya menjadi
+                artikel formal sesuai jenjang pendidikan yang dipilih.
               </p>
               <textarea
                 rows={6}
@@ -484,7 +581,12 @@ const CreateNews: React.FC = () => {
                 disabled={isGenerating}
                 className="w-full flex items-center justify-center gap-3 bg-white text-slate-900 py-4 rounded-2xl font-black hover:bg-slate-100 disabled:opacity-50"
               >
-                {isGenerating ? <Loader2 className="w-5 h-5 animate-spin" /> : <Wand2 className="w-5 h-5" />} Generate Konten
+                {isGenerating ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Wand2 className="w-5 h-5" />
+                )}{" "}
+                Generate Konten
               </button>
             </div>
           </section>
